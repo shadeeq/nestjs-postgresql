@@ -23,7 +23,7 @@ export class AppController {
   }
 
   @Get('/current-user')
-  getUserById(@Query('userId') userId: string) {
+  getUserById(@Query('userId') userId: string): GetUserDto {
     return this.userService.getUserById(userId);
   }
 }

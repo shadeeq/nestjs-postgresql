@@ -10,10 +10,10 @@ import { CreateUserDto } from '../dto/create-user.dto';
 
 @Injectable()
 export class CheckExistingUserPipe implements PipeTransform {
-  @Inject(UserService) appService: UserService;
+  @Inject(UserService) userService: UserService;
 
-  transform(value: CreateUserDto, metadata: ArgumentMetadata): any {
-    const existingUser = this.appService.usersList.find(
+  transform(value: CreateUserDto, metadata: ArgumentMetadata): CreateUserDto {
+    const existingUser = this.userService.usersList.find(
       (user) => user.username === value.username,
     );
     if (existingUser) {

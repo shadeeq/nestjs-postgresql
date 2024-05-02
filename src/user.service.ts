@@ -6,7 +6,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 @Injectable()
 export class UserService {
   usersList: GetUserDto[] = [];
-  currentUser: CreateUserDto | null = null;
+  currentUser: GetUserDto | null = null;
 
   createUser(userDto: CreateUserDto): GetUserDto {
     const newUser = { ...userDto, id: uuidv4() };
@@ -14,7 +14,7 @@ export class UserService {
     return newUser;
   }
 
-  logIn(user: CreateUserDto): any {
+  logIn(user: CreateUserDto): GetUserDto {
     this.currentUser = user;
     return this.currentUser;
   }
