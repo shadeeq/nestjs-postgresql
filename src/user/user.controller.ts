@@ -12,8 +12,8 @@ import { UserService } from './user.service';
 import { User } from './entities/user.entity';
 import { DeleteResult } from 'typeorm';
 import { ValidateSchemaPipe } from '../pipes/validate-schema.pipe';
-import { createUserSchema, CreateUserDto } from '../dto/create-user.dto';
-import { updateUserSchema, UpdateUserDto } from '../dto/update-user.dto';
+import { createUserSchema, CreateUserDto } from './dto/create-user.dto';
+import { updateUserSchema, UpdateUserDto } from './dto/update-user.dto';
 import { CheckExistingUserPipe } from '../pipes/check-existing-user.pipe';
 import {
   bulkDeleteIdsSchema,

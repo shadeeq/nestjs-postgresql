@@ -1,6 +1,6 @@
 import { Inject, Injectable, PipeTransform } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { CvCreateUserDto } from '../user/dto/cv-create-user.dto';
+import { CvCreateUserDto } from '../user/dto/class-validators/cv-create-user.dto';
 import { ZodError, ZodIssue } from 'zod';
 
 @Injectable()
