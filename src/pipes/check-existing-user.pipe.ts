@@ -1,21 +1,20 @@
 import {
-  ArgumentMetadata,
   BadRequestException,
   Inject,
   Injectable,
   PipeTransform,
 } from '@nestjs/common';
-import { UserService } from '../user.service';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { UserService } from '../user/user.service';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class CheckExistingUserPipe implements PipeTransform {
   @Inject(UserService) userService: UserService;
 
-  transform(value: CreateUserDto, metadata: ArgumentMetadata): CreateUserDto {
-    const existingUser = this.userService.usersList.find(
-      (user) => user.username === value.username,
-    );
+  async transform(value: CreateUserDto): Promise<CreateUserDto> {
+    const existingUser = await this.userService.findOne({
+      username: value.username,
+    });
     if (existingUser) {
       throw new BadRequestException('User already exists');
     } else {
