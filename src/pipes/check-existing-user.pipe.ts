@@ -1,22 +1,24 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  PipeTransform,
-} from '@nestjs/common';
+import { Inject, Injectable, PipeTransform } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { CvCreateUserDto } from '../user/dto/cv-create-user.dto';
+import { ZodError, ZodIssue } from 'zod';
 
 @Injectable()
 export class CheckExistingUserPipe implements PipeTransform {
   @Inject(UserService) userService: UserService;
 
-  async transform(value: CreateUserDto): Promise<CreateUserDto> {
+  async transform(value: CvCreateUserDto): Promise<CvCreateUserDto> {
     const existingUser = await this.userService.findOne({
       username: value.username,
     });
     if (existingUser) {
-      throw new BadRequestException('User already exists');
+      throw new ZodError([
+        {
+          code: 'not_multiple_of',
+          message: 'User already exists',
+          path: ['user'],
+        } as ZodIssue,
+      ]);
     } else {
       return value;
     }

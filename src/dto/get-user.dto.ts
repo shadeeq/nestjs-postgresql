@@ -1,9 +1,8 @@
 import { z } from 'zod';
+import { createUserSchema } from './create-user.dto';
 
-const getUserSchema = z.object({
-  id: z.string(),
-  username: z.string(),
-  password: z.string(),
+export const getUserSchema = createUserSchema.extend({
+  id: z.number().int().optional(),
 });
 
 export type GetUserDto = z.infer<typeof getUserSchema>;

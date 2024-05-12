@@ -12,7 +12,7 @@ import {
 const passwordRegEx =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
-export class CreateUserDto {
+export class CvCreateUserDto {
   @IsString()
   @MinLength(2, { message: 'Name must have at least 2 characters.' })
   @IsNotEmpty()

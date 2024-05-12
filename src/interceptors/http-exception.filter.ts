@@ -1,28 +1,20 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import { Response } from 'express';
+import { ZodError } from 'zod';
 
-@Catch(HttpException)
-export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost): any {
+@Catch(ZodError)
+export class HttpExceptionFilter<T extends ZodError>
+  implements ExceptionFilter
+{
+  catch(exception: T, host: ArgumentsHost): any {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
-    const status = exception.getStatus();
-    const exceptionResponse = exception.getResponse();
+    const status = 400;
 
     response.status(status).json({
       statusCode: status,
-      path: request.url,
-      error:
-        typeof exceptionResponse === 'string'
-          ? exceptionResponse
-          : exceptionResponse['error'],
-      message: exceptionResponse['message'],
+      errors: exception.errors,
+      message: exception.message,
     });
   }
 }
