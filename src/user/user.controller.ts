@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UsePipes,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
@@ -15,10 +16,7 @@ import { ValidateSchemaPipe } from '../pipes/validate-schema.pipe';
 import { createUserSchema, CreateUserDto } from './dto/create-user.dto';
 import { updateUserSchema, UpdateUserDto } from './dto/update-user.dto';
 import { CheckExistingUserPipe } from '../pipes/check-existing-user.pipe';
-import {
-  bulkDeleteIdsSchema,
-  BulkDeleteIdsDto,
-} from '../dto/bulk-delete-ids.dto';
+import { bulkIdsSchema, BulkIdsDto } from '../dto/bulk-ids.dto';
 
 @Controller('user')
 export class UserController {
@@ -36,29 +34,37 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<User | null> {
-    return this.userService.findOne({ id: +id });
+  findOne(@Param('id', ParseIntPipe) id: number): Promise<User | null> {
+    return this.userService.findOne({ id });
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body(new ValidateSchemaPipe(updateUserSchema))
     updateUserDto: UpdateUserDto,
-  ): Promise<User> {
-    return this.userService.update(+id, updateUserDto);
+  ): Promise<User | null> {
+    return this.userService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<DeleteResult> {
-    return this.userService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
+    return this.userService.remove(id);
   }
 
   @Post('/bulk-remove')
   bulkDelete(
-    @Body(new ValidateSchemaPipe(bulkDeleteIdsSchema))
-    { ids }: BulkDeleteIdsDto,
+    @Body(new ValidateSchemaPipe(bulkIdsSchema))
+    { ids }: BulkIdsDto,
   ): Promise<DeleteResult> {
     return this.userService.remove(ids);
+  }
+
+  @Post('/bulk-get')
+  bulkGet(
+    @Body(new ValidateSchemaPipe(bulkIdsSchema))
+    { ids }: BulkIdsDto,
+  ): Promise<User[]> {
+    return this.userService.findByIds(ids);
   }
 }
