@@ -30,11 +30,11 @@ export class UserService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
     const user = new User();
-    user.name = updateUserDto.name ?? user.name;
-    user.age = updateUserDto.age ?? user.age;
-    user.email = updateUserDto.email ?? user.email;
-    user.username = updateUserDto.username ?? user.username;
-    user.password = updateUserDto.password ?? user.password;
+    user.name = updateUserDto.name;
+    user.age = updateUserDto.age;
+    user.email = updateUserDto.email;
+    user.username = updateUserDto.username;
+    user.password = updateUserDto.password;
     user.id = id;
     await this.userRepository.save(user);
     return this.userRepository.findOneBy({ id });
