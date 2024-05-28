@@ -4,39 +4,27 @@ import { User } from './entities/user.entity';
 import { DeleteResult, In, Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserFindOptions } from "./models/find-options";
 
 @Injectable()
 export class UserService {
   @InjectRepository(User) private readonly userRepository: Repository<User>;
 
   create(createUserDto: CreateUserDto): Promise<User> {
-    const user = new User();
-    user.name = createUserDto.name;
-    user.age = createUserDto.age;
-    user.email = createUserDto.email;
-    user.username = createUserDto.username;
-    user.password = createUserDto.password;
-    user.gender = createUserDto.gender;
-    return this.userRepository.save(user);
+    return this.userRepository.save(createUserDto);
   }
 
   findAll(): Promise<User[]> {
     return this.userRepository.find();
   }
 
-  findOne(findOptions: UpdateUserDto): Promise<User | null> {
+  findOne(findOptions: UserFindOptions): Promise<User | null> {
     return this.userRepository.findOneBy(findOptions);
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User | null> {
-    const user = new User();
-    user.name = updateUserDto.name;
-    user.age = updateUserDto.age;
-    user.email = updateUserDto.email;
-    user.username = updateUserDto.username;
-    user.password = updateUserDto.password;
-    user.id = id;
-    await this.userRepository.save(user);
+    updateUserDto.id = id;
+    await this.userRepository.save(updateUserDto);
     return this.userRepository.findOneBy({ id });
   }
 
